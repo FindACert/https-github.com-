@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WGU Certificate Pathfinder</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 40px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,.1);
+}
+
+h1 {
+    color: #002855;
+}
+
+.question {
+    margin-bottom: 25px;
+}
+
+.question h3 {
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin: 8px 0;
+    cursor: pointer;
+}
+
+button {
+    background: #002855;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #003d7a;
+}
+
+#results {
+    display: none;
+    margin-top: 30px;
+}
+
+.result-card {
+    background: #eef5ff;
+    border-left: 5px solid #002855;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.match {
+    font-weight: bold;
+    color: green;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>WGU Certificate Pathfinder</h1>
+
+<p>Answer a few questions and discover certificates that align with your interests.</p>
+
+<form id="quiz">
+
+<div class="question">
+<h3>1. Which area interests you most?</h3>
+
+<label><input type="radio" name="interest" value="technology" required> Technology</label>
+<label><input type="radio" name="interest" value="cybersecurity"> Cybersecurity</label>
+<label><input type="radio" name="interest" value="data"> Data Analytics</label>
+<label><input type="radio" name="interest" value="business"> Business</label>
+<label><input type="radio" name="interest" value="healthcare"> Healthcare</label>
+<label><input type="radio" name="interest" value="education"> Education</label>
+</div>
+
+<div class="question">
+<h3>2. What best describes your experience level?</h3>
+
+<label><input type="radio" name="experience" value="beginner" required> Beginner</label>
+<label><input type="radio" name="experience" value="intermediate"> Some Experience</label>
+<label><input type="radio" name="experience" value="advanced"> Experienced</label>
+</div>
+
+<div class="question">
+<h3>3. What is your primary goal?</h3>
+
+<label><input type="radio" name="goal" value="careerchange" required> Change Careers</label>
+<label><input type="radio" name="goal" value="promotion"> Earn a Promotion</label>
+<label><input type="radio" name="goal" value="skills"> Learn New Skills</label>
+<label><input type="radio" name="goal" value="degree"> Prepare for a Degree</label>
+</div>
+
+<div class="question">
+<h3>4. What type of work sounds most appealing?</h3>
+
+<label><input type="radio" name="work" value="technical" required> Solving Technical Problems</label>
+<label><input type="radio" name="work" value="analytics"> Working with Data</label>
+<label><input type="radio" name="work" value="leadership"> Leading Teams</label>
+<label><input type="radio" name="work" value="helping"> Helping Others</label>
+<label><input type="radio" name="work" value="teaching"> Teaching & Coaching</label>
+</div>
+
+<div class="question">
+<h3>5. How quickly would you like to complete a certificate?</h3>
+
+<label><input type="radio" name="timeline" value="fast" required> Under 3 Months</label>
+<label><input type="radio" name="timeline" value="medium"> 3–6 Months</label>
+<label><input type="radio" name="timeline" value="extended"> 6+ Months</label>
+</div>
+
+<button type="submit">Show My Recommendations</button>
+
+</form>
+
+<div id="results"></div>
+
+</div>
+
+<script>
+
+const certificates = [
+{
+name:"Cybersecurity Foundations",
+category:"cybersecurity",
+description:"Explore security principles, threats, and digital protection."
+},
+{
+name:"Cloud Computing Fundamentals",
+category:"technology",
+description:"Build foundational cloud and infrastructure knowledge."
+},
+{
+name:"IT Foundations",
+category:"technology",
+description:"Learn networking, operating systems, and IT support skills."
+},
+{
+name:"Data Analytics",
+category:"data",
+description:"Analyze data and uncover business insights."
+},
+{
+name:"Business Management",
+category:"business",
+description:"Develop leadership and operational management capabilities."
+},
+{
+name:"Healthcare Administration",
+category:"healthcare",
+description:"Support healthcare operations and organizational success."
+},
+{
+name:"Educational Leadership",
+category:"education",
+description:"Strengthen instructional and educational leadership skills."
+}
+];
+
+function calculateScores(formData){
+
+let scores = {};
+
+certificates.forEach(cert=>{
+scores[cert.name] = 0;
+});
+
+certificates.forEach(cert=>{
+if(cert.category === formData.interest){
+scores[cert.name] += 50;
+}
+});
+
+if(formData.work === "technical"){
+scores["Cybersecurity Foundations"] += 20;
+scores["Cloud Computing Fundamentals"] += 20;
+scores["IT Foundations"] += 20;
+}
+
+if(formData.work === "analytics"){
+scores["Data Analytics"] += 25;
+}
+
+if(formData.work === "leadership"){
+scores["Business Management"] += 25;
+}
+
+if(formData.work === "helping"){
+scores["Healthcare Administration"] += 25;
+}
+
+if(formData.work === "teaching"){
+scores["Educational Leadership"] += 25;
+}
+
+if(formData.experience === "beginner"){
+scores["IT Foundations"] += 15;
+scores["Cloud Computing Fundamentals"] += 10;
+}
+
+if(formData.goal === "promotion"){
+scores["Business Management"] += 15;
+scores["Healthcare Administration"] += 15;
+scores["Educational Leadership"] += 15;
+}
+
+if(formData.goal === "careerchange"){
+scores["Cybersecurity Foundations"] += 10;
+scores["Data Analytics"] += 10;
+scores["IT Foundations"] += 10;
+}
+
+return scores;
+}
+
+document.getElementById("quiz").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+const formData = {
+interest: document.querySelector('input[name="interest"]:checked').value,
+experience: document.querySelector('input[name="experience"]:checked').value,
+goal: document.querySelector('input[name="goal"]:checked').value,
+work: document.querySelector('input[name="work"]:checked').value,
+timeline: document.querySelector('input[name="timeline"]:checked').value
+};
+
+const scores = calculateScores(formData);
+
+const topThree = certificates
+.map(cert => ({
+...cert,
+score: scores[cert.name]
+}))
+.sort((a,b)=>b.score-a.score)
+.slice(0,3);
+
+let html = "<h2>Your Top Certificate Recommendations</h2>";
+
+topThree.forEach((cert,index)=>{
+
+html += `
+<div class="result-card">
+<h3>#${index+1} ${cert.name}</h3>
+<p class="match">${Math.min(cert.score,100)}% Match</p>
+<p>${cert.description}</p>
+</div>
+`;
+});
+
+const results = document.getElementById("results");
+results.innerHTML = html;
+results.style.display = "block";
+
+results.scrollIntoView({
+behavior:"smooth"
+});
+});
+
+</script>
+
+</body>
+</html>
